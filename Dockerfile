@@ -62,7 +62,19 @@ WORKDIR /app
 COPY --from=build /app /app
 
 # Ensure `editly` binary available in container
-RUN npm link
+RUN npm install express multer json5 uuid && npm link
+#RUN npm link
+
+# Copy server file
+COPY server.js /app/server.js
+
+# Expose the API port
+EXPOSE 3000
+
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "xvfb-run", "--server-args", "-screen 0 1280x1024x24 -ac"]
-CMD [ "editly" ]
+
+
+# Start the Express server when the container runs
+CMD ["node", "server.js"]
+#CMD [ "editly" ]
